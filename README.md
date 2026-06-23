@@ -1,0 +1,1 @@
+# K-sch-Design-S-rl
