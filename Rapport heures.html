@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html lang="fr">
-<head>
-<meta charset="UTF-8">
+<!-- saved from url=(0060)file:///C:/Users/adel2/Downloads/kosch_rapport_hebdo_44.html -->
+<html lang="fr"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Kösch Design — Rapport hebdomadaire</title>
 <style>
@@ -90,6 +90,7 @@ body{font-family:Inter,sans-serif;background:#EEE;color:var(--dark);}
 .repas-toggles{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px;}
 .repas-toggle{padding:9px 14px;border-radius:20px;font-size:13px;font-weight:600;cursor:pointer;font-family:Inter,sans-serif;border:1.5px solid #ddd;background:white;color:#999;transition:all .15s;}
 .repas-toggle.on{border-color:var(--rouge);background:var(--rouge);color:white;}
+.repas-toggle.disabled{opacity:.4;background:#f0f0f0;color:#bbb;border-color:#e0e0e0;cursor:not-allowed;text-decoration:line-through;}
 .frais-inputs{display:flex;flex-direction:column;gap:12px;}
 .week-total-card{background:var(--dark);border-radius:12px;padding:18px 20px;display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;border-left:5px solid var(--rouge);}
 .week-total-card .wtlabel{font-size:13px;font-weight:700;color:#ccc;letter-spacing:.5px;text-transform:uppercase;}
@@ -149,10 +150,11 @@ body{font-family:Inter,sans-serif;background:#EEE;color:var(--dark);}
 
 <div class="toolbar">
   <div class="lang-switch">
-    <button class="lang-btn active" id="lang-fr" onclick="setLang('fr')">FR</button>
-    <button class="lang-btn" id="lang-de" onclick="setLang('de')">DE</button>
+    <button class="lang-btn active" id="lang-fr" onclick="setLang(&#39;fr&#39;)">FR</button>
+    <button class="lang-btn" id="lang-de" onclick="setLang(&#39;de&#39;)">DE</button>
   </div>
   <div class="toolbar-actions">
+    <button class="btn btn-ghost" id="btn-clear" onclick="resetSheet()">🗑 <span data-i18n="clear">Effacer</span></button>
     <button class="btn btn-ghost" id="btn-blank" onclick="printBlank()">🖨 <span data-i18n="blank">Vierge</span></button>
     <button class="btn btn-ghost" id="btn-pdf" onclick="generatePdf()">⬇ PDF</button>
     <button class="btn btn-rouge" id="btn-send" onclick="sendByEmail()">📧 <span data-i18n="send">Envoyer</span></button>
@@ -180,15 +182,395 @@ body{font-family:Inter,sans-serif;background:#EEE;color:var(--dark);}
 
   <div class="day-toggles-card">
     <div class="tlabel" data-i18n="daysToShow">Jours à afficher</div>
-    <div id="day-toggles"></div>
+    <div id="day-toggles"><button class="day-toggle" onclick="toggleDay(&#39;Lundi&#39;)" style="border:1.5px solid var(--rouge);background:var(--rouge);color:white;">✓ Lun</button><button class="day-toggle" onclick="toggleDay(&#39;Mardi&#39;)" style="border:1.5px solid var(--rouge);background:var(--rouge);color:white;">✓ Mar</button><button class="day-toggle" onclick="toggleDay(&#39;Mercredi&#39;)" style="border:1.5px solid var(--rouge);background:var(--rouge);color:white;">✓ Mer</button><button class="day-toggle" onclick="toggleDay(&#39;Jeudi&#39;)" style="border:1.5px solid var(--rouge);background:var(--rouge);color:white;">✓ Jeu</button><button class="day-toggle" onclick="toggleDay(&#39;Vendredi&#39;)" style="border:1.5px solid var(--rouge);background:var(--rouge);color:white;">✓ Ven</button><button class="day-toggle" onclick="toggleDay(&#39;Samedi&#39;)" style="border:1.5px solid #ddd;background:white;color:#999;">Sam</button><button class="day-toggle" onclick="toggleDay(&#39;Dimanche&#39;)" style="border:1.5px solid #ddd;background:white;color:#999;">Dim</button></div>
   </div>
 
-  <div id="days-container"></div>
+  <div id="days-container">
+    <div class="day-card">
+      <div class="day-card-header">
+        <span class="dname">Lundi<input type="date" id="day-date-0" onchange="autoFillDates(0)"></span>
+        <span style="display:flex;align-items:center;gap:10px;">
+          <select class="status-select" id="status-0" onchange="onStatusChange(0)">
+            <option value="__work__">Travaillé</option>
+            <option value="Vacances">Vacances</option>
+            <option value="Férié">Jour férié</option>
+            <option value="__autre__">Autre (préciser)</option>
+          </select>
+          <span class="dtotal" id="day-total-0">0h00</span>
+        </span>
+      </div>
+      <div class="absent-panel" id="absent-panel-0" style="display:none;">
+        <div class="fg-mini" id="absent-autre-fg-0" style="display:none;">
+          <label>Précisez</label>
+          <input type="text" id="absent-autre-0" placeholder="Motif...">
+        </div>
+      </div>
+      <div id="day-body-0"><div class="chantier-block">
+    
+    
+    <div class="entry-fields">
+      <div class="cc-row">
+        <div class="fg-mini"><label>Client</label><input type="text" placeholder="Nom du client"></div>
+        <div class="fg-mini"><label>Chantier</label><input type="text" placeholder="Adresse / lieu"></div>
+      </div>
+      <div class="slots">
+        <div class="slot">
+    <div class="slot-label">Matin</div>
+    <div class="time-row-2">
+      <div class="fg-mini"><label>Début</label>
+        <div class="time-select-group">
+          <select class="t-start-h" onchange="calc(0)"><option value="">--</option><option value="00">00</option><option value="01">01</option><option value="02">02</option><option value="03">03</option><option value="04">04</option><option value="05">05</option><option value="06">06</option><option value="07">07</option><option value="08">08</option><option value="09">09</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option></select>
+          <span class="time-colon">:</span>
+          <select class="t-start-m" onchange="calc(0)"><option value="">--</option><option value="00">00</option><option value="15">15</option><option value="30">30</option><option value="45">45</option></select>
+        </div>
+      </div>
+      <div class="fg-mini"><label>Fin</label>
+        <div class="time-select-group">
+          <select class="t-end-h" onchange="calc(0)"><option value="">--</option><option value="00">00</option><option value="01">01</option><option value="02">02</option><option value="03">03</option><option value="04">04</option><option value="05">05</option><option value="06">06</option><option value="07">07</option><option value="08">08</option><option value="09">09</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option></select>
+          <span class="time-colon">:</span>
+          <select class="t-end-m" onchange="calc(0)"><option value="">--</option><option value="00">00</option><option value="15">15</option><option value="30">30</option><option value="45">45</option></select>
+        </div>
+      </div>
+      <div class="time-result cell-hours">—</div>
+    </div>
+  </div>
+        <div class="slot">
+    <div class="slot-label">Après-midi</div>
+    <div class="time-row-2">
+      <div class="fg-mini"><label>Début</label>
+        <div class="time-select-group">
+          <select class="t-start-h" onchange="calc(0)"><option value="">--</option><option value="00">00</option><option value="01">01</option><option value="02">02</option><option value="03">03</option><option value="04">04</option><option value="05">05</option><option value="06">06</option><option value="07">07</option><option value="08">08</option><option value="09">09</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option></select>
+          <span class="time-colon">:</span>
+          <select class="t-start-m" onchange="calc(0)"><option value="">--</option><option value="00">00</option><option value="15">15</option><option value="30">30</option><option value="45">45</option></select>
+        </div>
+      </div>
+      <div class="fg-mini"><label>Fin</label>
+        <div class="time-select-group">
+          <select class="t-end-h" onchange="calc(0)"><option value="">--</option><option value="00">00</option><option value="01">01</option><option value="02">02</option><option value="03">03</option><option value="04">04</option><option value="05">05</option><option value="06">06</option><option value="07">07</option><option value="08">08</option><option value="09">09</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option></select>
+          <span class="time-colon">:</span>
+          <select class="t-end-m" onchange="calc(0)"><option value="">--</option><option value="00">00</option><option value="15">15</option><option value="30">30</option><option value="45">45</option></select>
+        </div>
+      </div>
+      <div class="time-result cell-hours">—</div>
+    </div>
+  </div>
+      </div>
+      <div class="fg-mini"><label>Description du travail</label><textarea placeholder="Travail effectué..."></textarea></div>
+      <div class="fg-mini"><label>Remarque</label><textarea placeholder="Remarque (optionnel)..."></textarea></div>
+    </div>
+  </div></div>
+      <div class="add-entry" id="add-entry-0"><button onclick="addChantier(0)">+ Ajouter un autre chantier</button></div>
+    </div>
+  
+    <div class="day-card">
+      <div class="day-card-header">
+        <span class="dname">Mardi<input type="date" id="day-date-1" onchange="autoFillDates(1)"></span>
+        <span style="display:flex;align-items:center;gap:10px;">
+          <select class="status-select" id="status-1" onchange="onStatusChange(1)">
+            <option value="__work__">Travaillé</option>
+            <option value="Vacances">Vacances</option>
+            <option value="Férié">Jour férié</option>
+            <option value="__autre__">Autre (préciser)</option>
+          </select>
+          <span class="dtotal" id="day-total-1">0h00</span>
+        </span>
+      </div>
+      <div class="absent-panel" id="absent-panel-1" style="display:none;">
+        <div class="fg-mini" id="absent-autre-fg-1" style="display:none;">
+          <label>Précisez</label>
+          <input type="text" id="absent-autre-1" placeholder="Motif...">
+        </div>
+      </div>
+      <div id="day-body-1"><div class="chantier-block">
+    
+    
+    <div class="entry-fields">
+      <div class="cc-row">
+        <div class="fg-mini"><label>Client</label><input type="text" placeholder="Nom du client"></div>
+        <div class="fg-mini"><label>Chantier</label><input type="text" placeholder="Adresse / lieu"></div>
+      </div>
+      <div class="slots">
+        <div class="slot">
+    <div class="slot-label">Matin</div>
+    <div class="time-row-2">
+      <div class="fg-mini"><label>Début</label>
+        <div class="time-select-group">
+          <select class="t-start-h" onchange="calc(1)"><option value="">--</option><option value="00">00</option><option value="01">01</option><option value="02">02</option><option value="03">03</option><option value="04">04</option><option value="05">05</option><option value="06">06</option><option value="07">07</option><option value="08">08</option><option value="09">09</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option></select>
+          <span class="time-colon">:</span>
+          <select class="t-start-m" onchange="calc(1)"><option value="">--</option><option value="00">00</option><option value="15">15</option><option value="30">30</option><option value="45">45</option></select>
+        </div>
+      </div>
+      <div class="fg-mini"><label>Fin</label>
+        <div class="time-select-group">
+          <select class="t-end-h" onchange="calc(1)"><option value="">--</option><option value="00">00</option><option value="01">01</option><option value="02">02</option><option value="03">03</option><option value="04">04</option><option value="05">05</option><option value="06">06</option><option value="07">07</option><option value="08">08</option><option value="09">09</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option></select>
+          <span class="time-colon">:</span>
+          <select class="t-end-m" onchange="calc(1)"><option value="">--</option><option value="00">00</option><option value="15">15</option><option value="30">30</option><option value="45">45</option></select>
+        </div>
+      </div>
+      <div class="time-result cell-hours">—</div>
+    </div>
+  </div>
+        <div class="slot">
+    <div class="slot-label">Après-midi</div>
+    <div class="time-row-2">
+      <div class="fg-mini"><label>Début</label>
+        <div class="time-select-group">
+          <select class="t-start-h" onchange="calc(1)"><option value="">--</option><option value="00">00</option><option value="01">01</option><option value="02">02</option><option value="03">03</option><option value="04">04</option><option value="05">05</option><option value="06">06</option><option value="07">07</option><option value="08">08</option><option value="09">09</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option></select>
+          <span class="time-colon">:</span>
+          <select class="t-start-m" onchange="calc(1)"><option value="">--</option><option value="00">00</option><option value="15">15</option><option value="30">30</option><option value="45">45</option></select>
+        </div>
+      </div>
+      <div class="fg-mini"><label>Fin</label>
+        <div class="time-select-group">
+          <select class="t-end-h" onchange="calc(1)"><option value="">--</option><option value="00">00</option><option value="01">01</option><option value="02">02</option><option value="03">03</option><option value="04">04</option><option value="05">05</option><option value="06">06</option><option value="07">07</option><option value="08">08</option><option value="09">09</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option></select>
+          <span class="time-colon">:</span>
+          <select class="t-end-m" onchange="calc(1)"><option value="">--</option><option value="00">00</option><option value="15">15</option><option value="30">30</option><option value="45">45</option></select>
+        </div>
+      </div>
+      <div class="time-result cell-hours">—</div>
+    </div>
+  </div>
+      </div>
+      <div class="fg-mini"><label>Description du travail</label><textarea placeholder="Travail effectué..."></textarea></div>
+      <div class="fg-mini"><label>Remarque</label><textarea placeholder="Remarque (optionnel)..."></textarea></div>
+    </div>
+  </div></div>
+      <div class="add-entry" id="add-entry-1"><button onclick="addChantier(1)">+ Ajouter un autre chantier</button></div>
+    </div>
+  
+    <div class="day-card">
+      <div class="day-card-header">
+        <span class="dname">Mercredi<input type="date" id="day-date-2" onchange="autoFillDates(2)"></span>
+        <span style="display:flex;align-items:center;gap:10px;">
+          <select class="status-select" id="status-2" onchange="onStatusChange(2)">
+            <option value="__work__">Travaillé</option>
+            <option value="Vacances">Vacances</option>
+            <option value="Férié">Jour férié</option>
+            <option value="__autre__">Autre (préciser)</option>
+          </select>
+          <span class="dtotal" id="day-total-2">0h00</span>
+        </span>
+      </div>
+      <div class="absent-panel" id="absent-panel-2" style="display:none;">
+        <div class="fg-mini" id="absent-autre-fg-2" style="display:none;">
+          <label>Précisez</label>
+          <input type="text" id="absent-autre-2" placeholder="Motif...">
+        </div>
+      </div>
+      <div id="day-body-2"><div class="chantier-block">
+    
+    
+    <div class="entry-fields">
+      <div class="cc-row">
+        <div class="fg-mini"><label>Client</label><input type="text" placeholder="Nom du client"></div>
+        <div class="fg-mini"><label>Chantier</label><input type="text" placeholder="Adresse / lieu"></div>
+      </div>
+      <div class="slots">
+        <div class="slot">
+    <div class="slot-label">Matin</div>
+    <div class="time-row-2">
+      <div class="fg-mini"><label>Début</label>
+        <div class="time-select-group">
+          <select class="t-start-h" onchange="calc(2)"><option value="">--</option><option value="00">00</option><option value="01">01</option><option value="02">02</option><option value="03">03</option><option value="04">04</option><option value="05">05</option><option value="06">06</option><option value="07">07</option><option value="08">08</option><option value="09">09</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option></select>
+          <span class="time-colon">:</span>
+          <select class="t-start-m" onchange="calc(2)"><option value="">--</option><option value="00">00</option><option value="15">15</option><option value="30">30</option><option value="45">45</option></select>
+        </div>
+      </div>
+      <div class="fg-mini"><label>Fin</label>
+        <div class="time-select-group">
+          <select class="t-end-h" onchange="calc(2)"><option value="">--</option><option value="00">00</option><option value="01">01</option><option value="02">02</option><option value="03">03</option><option value="04">04</option><option value="05">05</option><option value="06">06</option><option value="07">07</option><option value="08">08</option><option value="09">09</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option></select>
+          <span class="time-colon">:</span>
+          <select class="t-end-m" onchange="calc(2)"><option value="">--</option><option value="00">00</option><option value="15">15</option><option value="30">30</option><option value="45">45</option></select>
+        </div>
+      </div>
+      <div class="time-result cell-hours">—</div>
+    </div>
+  </div>
+        <div class="slot">
+    <div class="slot-label">Après-midi</div>
+    <div class="time-row-2">
+      <div class="fg-mini"><label>Début</label>
+        <div class="time-select-group">
+          <select class="t-start-h" onchange="calc(2)"><option value="">--</option><option value="00">00</option><option value="01">01</option><option value="02">02</option><option value="03">03</option><option value="04">04</option><option value="05">05</option><option value="06">06</option><option value="07">07</option><option value="08">08</option><option value="09">09</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option></select>
+          <span class="time-colon">:</span>
+          <select class="t-start-m" onchange="calc(2)"><option value="">--</option><option value="00">00</option><option value="15">15</option><option value="30">30</option><option value="45">45</option></select>
+        </div>
+      </div>
+      <div class="fg-mini"><label>Fin</label>
+        <div class="time-select-group">
+          <select class="t-end-h" onchange="calc(2)"><option value="">--</option><option value="00">00</option><option value="01">01</option><option value="02">02</option><option value="03">03</option><option value="04">04</option><option value="05">05</option><option value="06">06</option><option value="07">07</option><option value="08">08</option><option value="09">09</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option></select>
+          <span class="time-colon">:</span>
+          <select class="t-end-m" onchange="calc(2)"><option value="">--</option><option value="00">00</option><option value="15">15</option><option value="30">30</option><option value="45">45</option></select>
+        </div>
+      </div>
+      <div class="time-result cell-hours">—</div>
+    </div>
+  </div>
+      </div>
+      <div class="fg-mini"><label>Description du travail</label><textarea placeholder="Travail effectué..."></textarea></div>
+      <div class="fg-mini"><label>Remarque</label><textarea placeholder="Remarque (optionnel)..."></textarea></div>
+    </div>
+  </div></div>
+      <div class="add-entry" id="add-entry-2"><button onclick="addChantier(2)">+ Ajouter un autre chantier</button></div>
+    </div>
+  
+    <div class="day-card">
+      <div class="day-card-header">
+        <span class="dname">Jeudi<input type="date" id="day-date-3" onchange="autoFillDates(3)"></span>
+        <span style="display:flex;align-items:center;gap:10px;">
+          <select class="status-select" id="status-3" onchange="onStatusChange(3)">
+            <option value="__work__">Travaillé</option>
+            <option value="Vacances">Vacances</option>
+            <option value="Férié">Jour férié</option>
+            <option value="__autre__">Autre (préciser)</option>
+          </select>
+          <span class="dtotal" id="day-total-3">0h00</span>
+        </span>
+      </div>
+      <div class="absent-panel" id="absent-panel-3" style="display:none;">
+        <div class="fg-mini" id="absent-autre-fg-3" style="display:none;">
+          <label>Précisez</label>
+          <input type="text" id="absent-autre-3" placeholder="Motif...">
+        </div>
+      </div>
+      <div id="day-body-3"><div class="chantier-block">
+    
+    
+    <div class="entry-fields">
+      <div class="cc-row">
+        <div class="fg-mini"><label>Client</label><input type="text" placeholder="Nom du client"></div>
+        <div class="fg-mini"><label>Chantier</label><input type="text" placeholder="Adresse / lieu"></div>
+      </div>
+      <div class="slots">
+        <div class="slot">
+    <div class="slot-label">Matin</div>
+    <div class="time-row-2">
+      <div class="fg-mini"><label>Début</label>
+        <div class="time-select-group">
+          <select class="t-start-h" onchange="calc(3)"><option value="">--</option><option value="00">00</option><option value="01">01</option><option value="02">02</option><option value="03">03</option><option value="04">04</option><option value="05">05</option><option value="06">06</option><option value="07">07</option><option value="08">08</option><option value="09">09</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option></select>
+          <span class="time-colon">:</span>
+          <select class="t-start-m" onchange="calc(3)"><option value="">--</option><option value="00">00</option><option value="15">15</option><option value="30">30</option><option value="45">45</option></select>
+        </div>
+      </div>
+      <div class="fg-mini"><label>Fin</label>
+        <div class="time-select-group">
+          <select class="t-end-h" onchange="calc(3)"><option value="">--</option><option value="00">00</option><option value="01">01</option><option value="02">02</option><option value="03">03</option><option value="04">04</option><option value="05">05</option><option value="06">06</option><option value="07">07</option><option value="08">08</option><option value="09">09</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option></select>
+          <span class="time-colon">:</span>
+          <select class="t-end-m" onchange="calc(3)"><option value="">--</option><option value="00">00</option><option value="15">15</option><option value="30">30</option><option value="45">45</option></select>
+        </div>
+      </div>
+      <div class="time-result cell-hours">—</div>
+    </div>
+  </div>
+        <div class="slot">
+    <div class="slot-label">Après-midi</div>
+    <div class="time-row-2">
+      <div class="fg-mini"><label>Début</label>
+        <div class="time-select-group">
+          <select class="t-start-h" onchange="calc(3)"><option value="">--</option><option value="00">00</option><option value="01">01</option><option value="02">02</option><option value="03">03</option><option value="04">04</option><option value="05">05</option><option value="06">06</option><option value="07">07</option><option value="08">08</option><option value="09">09</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option></select>
+          <span class="time-colon">:</span>
+          <select class="t-start-m" onchange="calc(3)"><option value="">--</option><option value="00">00</option><option value="15">15</option><option value="30">30</option><option value="45">45</option></select>
+        </div>
+      </div>
+      <div class="fg-mini"><label>Fin</label>
+        <div class="time-select-group">
+          <select class="t-end-h" onchange="calc(3)"><option value="">--</option><option value="00">00</option><option value="01">01</option><option value="02">02</option><option value="03">03</option><option value="04">04</option><option value="05">05</option><option value="06">06</option><option value="07">07</option><option value="08">08</option><option value="09">09</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option></select>
+          <span class="time-colon">:</span>
+          <select class="t-end-m" onchange="calc(3)"><option value="">--</option><option value="00">00</option><option value="15">15</option><option value="30">30</option><option value="45">45</option></select>
+        </div>
+      </div>
+      <div class="time-result cell-hours">—</div>
+    </div>
+  </div>
+      </div>
+      <div class="fg-mini"><label>Description du travail</label><textarea placeholder="Travail effectué..."></textarea></div>
+      <div class="fg-mini"><label>Remarque</label><textarea placeholder="Remarque (optionnel)..."></textarea></div>
+    </div>
+  </div></div>
+      <div class="add-entry" id="add-entry-3"><button onclick="addChantier(3)">+ Ajouter un autre chantier</button></div>
+    </div>
+  
+    <div class="day-card">
+      <div class="day-card-header">
+        <span class="dname">Vendredi<input type="date" id="day-date-4" onchange="autoFillDates(4)"></span>
+        <span style="display:flex;align-items:center;gap:10px;">
+          <select class="status-select" id="status-4" onchange="onStatusChange(4)">
+            <option value="__work__">Travaillé</option>
+            <option value="Vacances">Vacances</option>
+            <option value="Férié">Jour férié</option>
+            <option value="__autre__">Autre (préciser)</option>
+          </select>
+          <span class="dtotal" id="day-total-4">0h00</span>
+        </span>
+      </div>
+      <div class="absent-panel" id="absent-panel-4" style="display:none;">
+        <div class="fg-mini" id="absent-autre-fg-4" style="display:none;">
+          <label>Précisez</label>
+          <input type="text" id="absent-autre-4" placeholder="Motif...">
+        </div>
+      </div>
+      <div id="day-body-4"><div class="chantier-block">
+    
+    
+    <div class="entry-fields">
+      <div class="cc-row">
+        <div class="fg-mini"><label>Client</label><input type="text" placeholder="Nom du client"></div>
+        <div class="fg-mini"><label>Chantier</label><input type="text" placeholder="Adresse / lieu"></div>
+      </div>
+      <div class="slots">
+        <div class="slot">
+    <div class="slot-label">Matin</div>
+    <div class="time-row-2">
+      <div class="fg-mini"><label>Début</label>
+        <div class="time-select-group">
+          <select class="t-start-h" onchange="calc(4)"><option value="">--</option><option value="00">00</option><option value="01">01</option><option value="02">02</option><option value="03">03</option><option value="04">04</option><option value="05">05</option><option value="06">06</option><option value="07">07</option><option value="08">08</option><option value="09">09</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option></select>
+          <span class="time-colon">:</span>
+          <select class="t-start-m" onchange="calc(4)"><option value="">--</option><option value="00">00</option><option value="15">15</option><option value="30">30</option><option value="45">45</option></select>
+        </div>
+      </div>
+      <div class="fg-mini"><label>Fin</label>
+        <div class="time-select-group">
+          <select class="t-end-h" onchange="calc(4)"><option value="">--</option><option value="00">00</option><option value="01">01</option><option value="02">02</option><option value="03">03</option><option value="04">04</option><option value="05">05</option><option value="06">06</option><option value="07">07</option><option value="08">08</option><option value="09">09</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option></select>
+          <span class="time-colon">:</span>
+          <select class="t-end-m" onchange="calc(4)"><option value="">--</option><option value="00">00</option><option value="15">15</option><option value="30">30</option><option value="45">45</option></select>
+        </div>
+      </div>
+      <div class="time-result cell-hours">—</div>
+    </div>
+  </div>
+        <div class="slot">
+    <div class="slot-label">Après-midi</div>
+    <div class="time-row-2">
+      <div class="fg-mini"><label>Début</label>
+        <div class="time-select-group">
+          <select class="t-start-h" onchange="calc(4)"><option value="">--</option><option value="00">00</option><option value="01">01</option><option value="02">02</option><option value="03">03</option><option value="04">04</option><option value="05">05</option><option value="06">06</option><option value="07">07</option><option value="08">08</option><option value="09">09</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option></select>
+          <span class="time-colon">:</span>
+          <select class="t-start-m" onchange="calc(4)"><option value="">--</option><option value="00">00</option><option value="15">15</option><option value="30">30</option><option value="45">45</option></select>
+        </div>
+      </div>
+      <div class="fg-mini"><label>Fin</label>
+        <div class="time-select-group">
+          <select class="t-end-h" onchange="calc(4)"><option value="">--</option><option value="00">00</option><option value="01">01</option><option value="02">02</option><option value="03">03</option><option value="04">04</option><option value="05">05</option><option value="06">06</option><option value="07">07</option><option value="08">08</option><option value="09">09</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option></select>
+          <span class="time-colon">:</span>
+          <select class="t-end-m" onchange="calc(4)"><option value="">--</option><option value="00">00</option><option value="15">15</option><option value="30">30</option><option value="45">45</option></select>
+        </div>
+      </div>
+      <div class="time-result cell-hours">—</div>
+    </div>
+  </div>
+      </div>
+      <div class="fg-mini"><label>Description du travail</label><textarea placeholder="Travail effectué..."></textarea></div>
+      <div class="fg-mini"><label>Remarque</label><textarea placeholder="Remarque (optionnel)..."></textarea></div>
+    </div>
+  </div></div>
+      <div class="add-entry" id="add-entry-4"><button onclick="addChantier(4)">+ Ajouter un autre chantier</button></div>
+    </div>
+  </div>
 
   <div class="frais-card" id="frais-card">
     <div class="frais-card-title" data-i18n="expenses">Frais</div>
     <div class="frais-card-label" data-i18n="mealsTaken">Repas pris</div>
-    <div id="repas-toggles" class="repas-toggles"></div>
+    <div id="repas-toggles" class="repas-toggles"><button class="repas-toggle " onclick="toggleRepas(&#39;Lundi&#39;)">Lundi</button><button class="repas-toggle " onclick="toggleRepas(&#39;Mardi&#39;)">Mardi</button><button class="repas-toggle " onclick="toggleRepas(&#39;Mercredi&#39;)">Mercredi</button><button class="repas-toggle " onclick="toggleRepas(&#39;Jeudi&#39;)">Jeudi</button><button class="repas-toggle " onclick="toggleRepas(&#39;Vendredi&#39;)">Vendredi</button></div>
     <div class="frais-inputs">
       <div class="fg"><label data-i18n="otherExpense">Autre frais</label><input type="text" id="autre-frais" placeholder="Ex: parking, matériel..." data-i18n-ph="otherExpensePh"></div>
       <div class="fg"><label data-i18n="plate">Plaque(s) d'immatriculation</label><input type="text" id="plaque" placeholder="Ex: JU 12345" data-i18n-ph="platePh"></div>
@@ -214,7 +596,7 @@ let JOURS=["Lundi","Mardi","Mercredi","Jeudi","Vendredi"];
 let LANG="fr";
 const I18N={
   fr:{
-    blank:"Vierge", send:"Envoyer", nom:"Nom", prenom:"Prénom",
+    blank:"Vierge", send:"Envoyer", clear:"Effacer", clearConfirm:"Effacer toute la saisie et recommencer une feuille vide ?", nom:"Nom", prenom:"Prénom",
     daysToShow:"Jours à afficher", expenses:"Frais", mealsTaken:"Repas pris",
     otherExpense:"Autre frais", otherExpensePh:"Ex: parking, matériel...",
     plate:"Plaque(s) d'immatriculation", platePh:"Ex: JU 12345",
@@ -236,7 +618,7 @@ const I18N={
     dayTotal:"Total du jour"
   },
   de:{
-    blank:"Leer", send:"Senden", nom:"Name", prenom:"Vorname",
+    blank:"Leer", send:"Senden", clear:"Löschen", clearConfirm:"Alle Eingaben löschen und neu beginnen ?", nom:"Name", prenom:"Vorname",
     daysToShow:"Anzuzeigende Tage", expenses:"Spesen", mealsTaken:"Mahlzeiten",
     otherExpense:"Andere Spesen", otherExpensePh:"Z.B. Parking, Material...",
     plate:"Kennzeichen", platePh:"Z.B. JU 12345",
@@ -263,6 +645,13 @@ function dname(j){return I18N[LANG].days[j]||j;}
 function dshort(j){return I18N[LANG].daysShort[j]||j.slice(0,3);}
 function captureState(){
   const st={dates:{},absent:{},absentType:{},absentAutre:{},days:{}};
+  st.nom=(document.getElementById("nom")||{}).value||"";
+  st.prenom=(document.getElementById("prenom")||{}).value||"";
+  st.autreFrais=(document.getElementById("autre-frais")||{}).value||"";
+  st.plaque=(document.getElementById("plaque")||{}).value||"";
+  st.repas={...repasState};
+  st.activeDays=[...JOURS];
+  st.lang=LANG;
   JOURS.forEach((j,di)=>{
     const dd=document.getElementById("day-date-"+di); if(dd)st.dates[di]=dd.value;
     st.absent[di]=!!absentDays[di];
@@ -284,6 +673,11 @@ function captureState(){
   return st;
 }
 function restoreState(st){
+  if(st.nom!==undefined){const e=document.getElementById("nom");if(e)e.value=st.nom;}
+  if(st.prenom!==undefined){const e=document.getElementById("prenom");if(e)e.value=st.prenom;}
+  if(st.autreFrais!==undefined){const e=document.getElementById("autre-frais");if(e)e.value=st.autreFrais;}
+  if(st.plaque!==undefined){const e=document.getElementById("plaque");if(e)e.value=st.plaque;}
+  if(st.repas){repasState={...st.repas};}
   JOURS.forEach((j,di)=>{
     if(st.dates[di]!==undefined){const dd=document.getElementById("day-date-"+di);if(dd)dd.value=st.dates[di];}
     // restore chantier blocks
@@ -316,6 +710,7 @@ function restoreState(st){
     }
     calc(di);
   });
+  renderRepasToggles();
   calcWeek();
 }
 function setLang(l){
@@ -342,12 +737,17 @@ function renderDayToggles(){
 function renderRepasToggles(){
   const el=document.getElementById("repas-toggles");
   if(!el)return;
-  el.innerHTML=JOURS.map(j=>{
-    const on=repasState[j];
-    return `<button class="repas-toggle ${on?'on':''}" onclick="toggleRepas('${j}')">${on?'✓ ':''}${dname(j)}</button>`;
+  el.innerHTML=JOURS.map((j,di)=>{
+    const absent=!!absentDays[di];
+    const on=repasState[j]&&!absent;
+    const cls="repas-toggle "+(on?"on":"")+(absent?" disabled":"");
+    const click=absent?"":`onclick="toggleRepas('${j}')"`;
+    return `<button class="${cls}" ${click}>${on?'✓ ':''}${dname(j)}</button>`;
   }).join("");
 }
 function toggleRepas(j){
+  const di=JOURS.indexOf(j);
+  if(absentDays[di])return; // can't take a meal on an absent day
   repasState[j]=!repasState[j];
   renderRepasToggles();
 }
@@ -430,6 +830,9 @@ function onStatusChange(di){
     sel.classList.remove("absent");
     calc(di);
   } else {
+    // Absent: uncheck this day's meal
+    const dayName=JOURS[di];
+    if(dayName)repasState[dayName]=false;
     // Absence of some kind (Férié, Vacances, etc.)
     absentDays[di]=true;
     body.style.display="none";
@@ -445,6 +848,7 @@ function onStatusChange(di){
     }
     document.getElementById("day-total-"+di).textContent=t("absent");
   }
+  renderRepasToggles();
   calcWeek();
 }
 function getAbsentMotif(di){
@@ -896,8 +1300,45 @@ function printBlank(){
   setTimeout(()=>{win.focus();win.print();},400);
 }
 
+function resetSheet(){
+  if(!confirm(t("clearConfirm")))return;
+  try{localStorage.removeItem("kosch_rapport_autosave");}catch(e){}
+  location.reload();
+}
+// ===== AUTOSAVE (local, par téléphone) =====
+const SAVE_KEY="kosch_rapport_autosave";
+let saveTimer=null;
+function autoSave(){
+  try{
+    const st=captureState();
+    localStorage.setItem(SAVE_KEY,JSON.stringify(st));
+  }catch(e){}
+}
+function scheduleSave(){
+  clearTimeout(saveTimer);
+  saveTimer=setTimeout(autoSave,400);
+}
+function autoLoad(){
+  let st=null;
+  try{st=JSON.parse(localStorage.getItem(SAVE_KEY)||"null");}catch(e){}
+  if(!st)return;
+  // restore active days + language first
+  if(st.lang&&st.lang!==LANG){setLang(st.lang);}
+  if(st.activeDays&&st.activeDays.length){JOURS=JOURS_ALL.filter(d=>st.activeDays.includes(d));}
+  renderDayToggles();
+  buildSheet();
+  restoreState(st);
+}
+function clearAutoSave(){
+  try{localStorage.removeItem(SAVE_KEY);}catch(e){}
+}
+// Save on any input/change anywhere in the form
+document.addEventListener("input",scheduleSave,true);
+document.addEventListener("change",scheduleSave,true);
+
 renderDayToggles();
 buildSheet();
+autoLoad();
 </script>
-</body>
-</html>
+
+</body></html>
