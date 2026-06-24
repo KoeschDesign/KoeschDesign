@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- saved from url=(0060)file:///C:/Users/adel2/Downloads/kosch_rapport_hebdo_44.html -->
+<!-- saved from url=(0060)file:///C:/Users/adel2/Downloads/kosch_rapport_hebdo_45.html -->
 <html lang="fr"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -77,9 +77,9 @@ body{font-family:Inter,sans-serif;background:#EEE;color:var(--dark);}
 
 .absent-btn{background:white;border:1.5px solid rgba(255,255,255,.4);color:white;border-radius:6px;padding:5px 11px;font-size:12px;font-weight:600;cursor:pointer;font-family:Inter,sans-serif;background:rgba(255,255,255,.1);}
 .absent-btn.active{background:var(--rouge);border-color:var(--rouge);}
-.status-select{background:rgba(255,255,255,.12);border:1.5px solid rgba(255,255,255,.4);color:white;border-radius:6px;padding:5px 26px 5px 9px;font-size:12px;font-weight:600;cursor:pointer;font-family:Inter,sans-serif;-webkit-appearance:none;appearance:none;}
+.status-select{background:rgba(255,255,255,.12) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='white' stroke-width='1.6' fill='none' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 9px center;border:1.5px solid rgba(255,255,255,.45);color:white;border-radius:6px;padding:5px 26px 5px 9px;font-size:12px;font-weight:600;cursor:pointer;font-family:Inter,sans-serif;-webkit-appearance:none;appearance:none;}
 .status-select option{color:#222;}
-.status-select.absent{background:var(--rouge);border-color:var(--rouge);}
+.status-select.absent{background-color:var(--rouge);border-color:var(--rouge);}
 .absent-panel{padding:14px 16px;background:#fff5f5;border-bottom:1px solid #f0d0d0;}
 .add-entry{padding:12px 16px;}
 .add-entry button{width:100%;background:#fff5f5;border:1.5px dashed var(--rouge);border-radius:10px;color:var(--rouge);font-size:14px;font-weight:700;cursor:pointer;font-family:Inter,sans-serif;padding:13px;}
@@ -926,10 +926,21 @@ function calcWeek(){
 function fmtH(mins){const h=Math.floor(mins/60),m=mins%60;return h+"h"+String(m).padStart(2,"0");}
 
 function autoFillDates(di){
-  const val=document.getElementById("day-date-"+di).value;
+  let val=document.getElementById("day-date-"+di).value;
   if(!val)return;
-  const [y,m,d]=val.split("-").map(Number);
-  const base=new Date(y,m-1,d,12,0,0);
+  let [y,m,d]=val.split("-").map(Number);
+  let base=new Date(y,m-1,d,12,0,0);
+  // The week always starts on Monday. If the FIRST listed day (index 0, normally Lundi)
+  // is given a date that isn't a Monday, snap it back to the Monday of that week.
+  if(di===0){
+    const dow=base.getDay(); // 0=Sun,1=Mon,...
+    const offsetToMonday=(dow===0?-6:1-dow); // move back to Monday
+    if(offsetToMonday!==0){
+      base.setDate(base.getDate()+offsetToMonday);
+      const snapped=base.getFullYear()+"-"+String(base.getMonth()+1).padStart(2,"0")+"-"+String(base.getDate()).padStart(2,"0");
+      document.getElementById("day-date-0").value=snapped;
+    }
+  }
   const editedIdx=JOURS_ALL.indexOf(JOURS[di]);
   for(let i=0;i<JOURS.length;i++){
     if(i===di)continue;
